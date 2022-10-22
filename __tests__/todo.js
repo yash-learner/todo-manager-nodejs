@@ -50,4 +50,20 @@ describe("List the todo items", function () {
     const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
     expect(parsedUpdateResponse.completed).toBe(true);
   });
+
+  test("Delete a todo", async () => {
+    const response = await agent.post("/todos").send({
+      title: "Delete Todo",
+      dueDate: new Date().toISOString(),
+      completed: false,
+    });
+    const parsedResponse = JSON.parse(response.text);
+    const todoID = parsedResponse.id;
+
+    expect(parsedResponse.id).toBe(3);
+
+    const deleteResponse = await agent.delete(`/todos/${todoID}/`).send();
+    const parsedDeleteResponse = JSON.parse(deleteResponse.text);
+    expect(parsedDeleteResponse).toBe(true);
+  });
 });

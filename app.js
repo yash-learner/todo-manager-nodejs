@@ -9,8 +9,13 @@ const { Todo } = require("./models");
 
 app.set("view engine", "ejs");
 
-app.get("/", (request, response) => {
-  response.render("index");
+app.get("/", async (request, response) => {
+  const allTodos = await Todo.getAllTodos();
+  if (request.accepts("html")) {
+    response.render("index", { allTodos });
+  } else {
+    response.json({ allTodos });
+  }
 });
 
 // eslint-disable-next-line no-undef

@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 const app = require("./app");
-// eslint-disable-next-line no-undef
-app.listen(process.env.PORT, () => {
-  console.log("Started express server at port 3000");
+
+let server = app.listen(process.env.PORT, () => {
+  console.log(`Started express server at port ${server.address().port}`);
 });

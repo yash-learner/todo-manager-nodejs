@@ -11,11 +11,8 @@
     <%- include('header.ejs') %>
 
     <table>
-      <% for(var i = 0; i < allTodos.length; i++) {%>
-      <tr>
-        <td><%= allTodos[i].title %></td>
-      </tr>
-      <%}%>
+      <%- include('todos.ejs') %>
     </table>
+    <%- include('footer.ejs') %>
   </body>
 </html>

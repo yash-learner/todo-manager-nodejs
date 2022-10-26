@@ -5,10 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./css/styles.css" />
-    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>To-Do Manager</title>
   </head>
   <body>
-    <%- include('header.ejs') %>
+    <div class="grid grid-cols-6">
+      <div class="col-start-3 col-span-2">
+        <%- include('header.ejs') %>
+        <form>
+          <div class="flex gap-2 py-4">
+            <div class="flex-auto">
+              <input
+                type="text"
+                placeholder="What's next ?"
+                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"
+                required
+              />
+            </div>
+            <div class="flex-auto">
+              <input
+                type="date"
+                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4"
+              />
+            </div>
+            <div>
+              <button
+                type="submit"
+                class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <table>
       <%- include('todos.ejs') %>

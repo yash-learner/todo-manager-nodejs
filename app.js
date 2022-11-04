@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 app.set("view engine", "ejs");
 
 // eslint-disable-next-line no-undef
-app.use(express.static(path.join(__dirname + "/public")));
+app.use(express.static(path.join(__dirname, "/public")));
 
 app.get("/", async (request, response) => {
   const allTodos = await Todo.getAllTodos();

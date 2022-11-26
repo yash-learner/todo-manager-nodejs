@@ -15,17 +15,20 @@ app.get("/", async (request, response) => {
   const overdue = await Todo.overdue();
   const dueToday = await Todo.dueToday();
   const dueLater = await Todo.dueLater();
-  // if (request.accepts("html")) {
-  //   response.render("index", { allTodos });
-  // } else {
-  //   response.json({ allTodos });
-  // }
-  response.render("index", {
-    title: "Todo Application",
-    overdue,
-    dueToday,
-    dueLater,
-  });
+  if (request.accepts("html")) {
+    response.render("index", {
+      title: "Todo application",
+      overdue,
+      dueToday,
+      dueLater,
+    });
+  } else {
+    response.json({
+      overdue,
+      dueToday,
+      dueLater,
+    });
+  }
 });
 
 // eslint-disable-next-line no-unused-vars
@@ -72,7 +75,7 @@ app.delete("/todos/:id", async (request, response) => {
   const todo = await Todo.findByPk(request.params.id);
   try {
     if (todo) {
-      await todo.delete();
+      await todo.deleteTodo(request.params.id);
       return response.json(true);
     }
     response.json(false);

@@ -15,17 +15,18 @@
         class="flex w-fit my-2 px-2 py-1 items-center rounded hover:bg-purple-50"
       >
         <input
+          id="todo-checkbox-<%= todos[i].id %>"
           type="checkbox"
-          name=""
-          id="todo-checkbox-1"
           class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-color-gray"
+          <%= todos[i].completed === true ? "checked" : "" %>
+          onclick="updateTodo(<%=todos[i].id%>)"
         />
         <label
-          for="todo-checkbox-1"
+          for="todo-checkbox-<%= todos[i].id %>"
           class="ml-2 text-sm text-gray-600 cursor-pointer"
           ><%= todos[i].title %></label
         >
-        <a href="#" class="hidden trash-icon ml-2">
+        <a href="#" class="hidden trash-icon ml-2" onclick="deleteTodo(<%=todos[i].id%>)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

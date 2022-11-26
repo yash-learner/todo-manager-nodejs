@@ -12,11 +12,12 @@
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
         <%- include('header.ejs') %>
-        <form>
+        <form action="/todos" method="post">
           <div class="flex gap-2 py-4">
             <div class="flex-auto">
               <input
                 type="text"
+                name="title"
                 placeholder="What's next ?"
                 class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"
                 required
@@ -24,6 +25,7 @@
             </div>
             <div class="flex-auto">
               <input
+                name="dueDate"
                 type="date"
                 class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4"
               />
@@ -38,7 +40,11 @@
             </div>
           </div>
         </form>
-        <%- include('todos.ejs') %>
+        <div>
+          <%- include('todos.ejs', {title: "Overdue", todos: overdue}) %>
+          <%- include('todos.ejs', {title: "Due Today", todos: dueToday}) %>
+          <%- include('todos.ejs', {title: "Due Later", todos: dueLater}) %>
+        </div>
       </div>
     </div>
     <%- include('footer.ejs') %>

@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const { Todo } = require("./models");
 
+app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set("view engine", "ejs");
 
@@ -11,12 +12,20 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "/public")));
 
 app.get("/", async (request, response) => {
-  const allTodos = await Todo.getAllTodos();
-  if (request.accepts("html")) {
-    response.render("index", { allTodos });
-  } else {
-    response.json({ allTodos });
-  }
+  const overdue = await Todo.overdue();
+  const dueToday = await Todo.dueToday();
+  const dueLater = await Todo.dueLater();
+  // if (request.accepts("html")) {
+  //   response.render("index", { allTodos });
+  // } else {
+  //   response.json({ allTodos });
+  // }
+  response.render("index", {
+    title: "Todo Application",
+    overdue,
+    dueToday,
+    dueLater,
+  });
 });
 
 // eslint-disable-next-line no-unused-vars
@@ -34,11 +43,12 @@ app.get("/todos", async (request, response) => {
 app.post("/todos", async (request, response) => {
   console.log("Creating a new Todo", request.body);
   try {
-    const todo = await Todo.addTodo({
+    await Todo.addTodo({
       title: request.body.title,
       dueDate: request.body.dueDate,
     });
-    return response.json(todo);
+    // return response.json(todo);
+    return response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);

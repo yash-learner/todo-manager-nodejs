@@ -71,6 +71,20 @@ module.exports = (sequelize, DataTypes) => {
       return this.update({ completed: true });
     }
 
+    setCompletionStatus(status) {
+      return this.update({ completed: status });
+    }
+
+    static async completed() {
+      const todos = await Todo.findAll({
+        where: {
+          completed: true,
+        },
+        order: [["id", "ASC"]],
+      });
+      return todos;
+    }
+
     static async deleteTodo(id) {
       return this.destroy({
         where: {

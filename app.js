@@ -3,10 +3,14 @@ const app = express();
 const bodyParser = require("body-parser");
 const path = require("path");
 const { Todo } = require("./models");
+const cookieParser = require("cookie-parser");
+const csrf = require("tiny-csrf");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set("view engine", "ejs");
+app.use(cookieParser("shh! some secret string"));
+app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 
 // eslint-disable-next-line no-undef
 app.use(express.static(path.join(__dirname, "/public")));
@@ -15,18 +19,22 @@ app.get("/", async (request, response) => {
   const overdue = await Todo.overdue();
   const dueToday = await Todo.dueToday();
   const dueLater = await Todo.dueLater();
+  const completed = await Todo.completed();
   if (request.accepts("html")) {
     response.render("index", {
       title: "Todo application",
       overdue,
       dueToday,
       dueLater,
+      completed,
+      csrfToken: request.csrfToken(),
     });
   } else {
     response.json({
       overdue,
       dueToday,
       dueLater,
+      completed,
     });
   }
 });
@@ -75,7 +83,7 @@ app.delete("/todos/:id", async (request, response) => {
   const todo = await Todo.findByPk(request.params.id);
   try {
     if (todo) {
-      await todo.deleteTodo(request.params.id);
+      await Todo.deleteTodo(request.params.id);
       return response.json(true);
     }
     response.json(false);

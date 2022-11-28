@@ -9,12 +9,13 @@
     <meta name="csrf-token" content="<%= csrfToken %>" />
     <script>
       const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-      function updateTodo(id) {
-        fetch(`/todos/${id}/markAsCompleted`, {
+      function updateTodo(id, completed) {
+        fetch(`/todos/${id}`, {
           method: "put",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             _csrf: token,
+            completed
           }),
         })
           .then((res) => {

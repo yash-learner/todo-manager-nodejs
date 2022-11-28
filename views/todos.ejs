@@ -18,8 +18,8 @@
           id="todo-checkbox-<%= todos[i].id %>"
           type="checkbox"
           class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-color-gray"
-          <%= todos[i].completed === true ? "checked" : "" %>
-          onclick="updateTodo(<%=todos[i].id%>)"
+          onclick="updateTodo(<%=todos[i].id%>, <%= !todos[i].completed%>)"
+          <%= todos[i].completed ? "checked" : "" %>
         />
         <label
           for="todo-checkbox-<%= todos[i].id %>"

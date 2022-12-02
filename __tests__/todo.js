@@ -70,10 +70,49 @@ describe("List the todo items", function () {
       });
     const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
     expect(parsedUpdateResponse.completed).toBe(true);
+  });
+
+  test("Mark a todo as Incomplete", async () => {
+    const agent = request.agent(server);
+    let res = await agent.get("/");
+    let csrfToken = extractCsrfToken(res);
+
+    // Add Todo
+    await agent.post("/todos").send({
+      _csrf: csrfToken,
+      title: "Buy milk",
+      dueDate: new Date().toISOString(),
+      completed: false,
+    });
+
+    const groupedTodosResponse = await agent
+      .get("/")
+      .set("Accept", "application/json");
+    const parsedGroupedResponse = JSON.parse(groupedTodosResponse.text);
+
+    expect(parsedGroupedResponse.dueToday).toBeDefined();
+
+    const dueTodayCount = parsedGroupedResponse.dueToday.length;
+    const latestTodo = parsedGroupedResponse.dueToday[dueTodayCount - 1];
 
     res = await agent.get("/");
     csrfToken = extractCsrfToken(res);
 
+    // Mark as completed
+    const markCompleteResponse = await agent
+      .put(`/todos/${latestTodo.id}/`)
+      .send({
+        _csrf: csrfToken,
+        id: latestTodo.id,
+        completed: true,
+      });
+    const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
+    expect(parsedUpdateResponse.completed).toBe(true);
+
+    res = await agent.get("/");
+    csrfToken = extractCsrfToken(res);
+
+    // Umark
     const markInCompleteResponse = await agent
       .put(`/todos/${latestTodo.id}/`)
       .send({

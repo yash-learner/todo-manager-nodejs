@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const path = require("path");
-const { Todo } = require("./models");
+const { Todo, User } = require("./models");
 const cookieParser = require("cookie-parser");
 const csrf = require("tiny-csrf");
 
@@ -39,6 +39,9 @@ app.get("/", async (request, response) => {
   }
 });
 
+app.get("/signup", (request, response) => {
+  response.render("signup", { csrfToken: request.csrfToken() });
+});
 // eslint-disable-next-line no-unused-vars
 app.get("/todos", async (request, response) => {
   console.log("Todo List");
@@ -49,6 +52,19 @@ app.get("/todos", async (request, response) => {
     console.log(error);
     return response.status(422).json(error);
   }
+});
+
+app.post("/users", async function (request, response) {
+  // eslint-disable-next-line no-unused-vars
+  const user = await User.create({
+    firstName: request.body.firstName,
+    lastName: request.body.lastName,
+    email: request.body.email,
+    password: request.body.password,
+  }).catch((error) => {
+    console.log(error);
+  });
+  response.redirect("/"); // Redirected to root path
 });
 
 app.post("/todos", async (request, response) => {

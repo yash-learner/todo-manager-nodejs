@@ -15,20 +15,26 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static addTodo({ title, dueDate }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false });
+    static addTodo({ title, dueDate, userId }) {
+      return this.create({
+        title: title,
+        dueDate: dueDate,
+        completed: false,
+        userId,
+      });
     }
 
     static getAllTodos() {
       return this.findAll();
     }
 
-    static async overdue() {
+    static async overdue(userId) {
       const todos = await Todo.findAll({
         where: {
           dueDate: {
             [Op.lt]: new Date(),
           },
+          userId,
           completed: false,
         },
         order: [["id", "ASC"]],
@@ -36,12 +42,13 @@ module.exports = (sequelize, DataTypes) => {
       return todos;
     }
 
-    static async dueToday() {
+    static async dueToday(userId) {
       const todos = await Todo.findAll({
         where: {
           dueDate: {
             [Op.eq]: new Date(),
           },
+          userId,
           completed: false,
         },
         order: [["id", "ASC"]],
@@ -49,13 +56,25 @@ module.exports = (sequelize, DataTypes) => {
       return todos;
     }
 
-    static async dueLater() {
+    static async dueLater(userId) {
       const todos = await Todo.findAll({
         where: {
           dueDate: {
             [Op.gt]: new Date(),
           },
+          userId,
           completed: false,
+        },
+        order: [["id", "ASC"]],
+      });
+      return todos;
+    }
+
+    static async completed(userId) {
+      const todos = await Todo.findAll({
+        where: {
+          userId,
+          completed: true,
         },
         order: [["id", "ASC"]],
       });
@@ -81,20 +100,11 @@ module.exports = (sequelize, DataTypes) => {
       return this.update({ completed: status });
     }
 
-    static async completed() {
-      const todos = await Todo.findAll({
-        where: {
-          completed: true,
-        },
-        order: [["id", "ASC"]],
-      });
-      return todos;
-    }
-
-    static async deleteTodo(id) {
+    static async deleteTodo(id, userId) {
       return this.destroy({
         where: {
           id,
+          userId,
         },
       });
     }

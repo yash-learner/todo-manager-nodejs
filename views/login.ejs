@@ -27,6 +27,11 @@
             <button type="submit" class="text-white bg-green-600 hover:bg-green-700 font-medium rounded text-sm px-5 py-2 mr-2 mb-2">Sign In</button>
           </div>
         </form>
+        <% if(messages && messages.error && messages.error.length > 0)  { %>
+          <% for(var i=0; i<messages.error.length; i++) { %>
+                  <li> <%= messages.error[i] %></li>
+          <% } %>
+        <% } %>
       </div>
     </div>
   </body>

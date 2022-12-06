@@ -6,6 +6,7 @@ const { Todo, User } = require("./models");
 const cookieParser = require("cookie-parser");
 const csrf = require("tiny-csrf");
 const bcrypt = require("bcrypt");
+const flash = require("connect-flash");
 const saltRounds = 10;
 
 const passport = require("passport");
@@ -21,6 +22,8 @@ app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 
 // eslint-disable-next-line no-undef
 app.use(express.static(path.join(__dirname, "/public")));
+// eslint-disable-next-line no-undef
+app.set("views", path.join(__dirname, "views"));
 
 app.use(
   session({
@@ -47,7 +50,7 @@ passport.use(
           if (result) {
             return done(null, user);
           } else {
-            return done("Invalid Password");
+            return done(null, false, { message: "Invalid password" });
           }
         })
         .catch((error) => {
@@ -72,6 +75,12 @@ passport.deserializeUser((id, done) => {
     });
 });
 
+app.use(flash());
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
+
 app.get("/", async (request, response) => {
   response.render("index", {
     title: "Todo application",
@@ -94,7 +103,10 @@ app.get("/login", (request, response) => {
 
 app.post(
   "/session",
-  passport.authenticate("local", { failureRedirect: "/login" }),
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
   (request, response) => {
     console.log(request.user);
     response.redirect("/todos");

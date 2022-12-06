@@ -7,10 +7,10 @@ const app = require("../app");
 // eslint-disable-next-line no-unused-vars
 let server, agent;
 
-function extractCsrfToken(res) {
+const extractCsrfToken = (res) => {
   var $ = cheerio.load(res.text);
   return $("[name=_csrf]").val();
-}
+};
 
 const login = async (agent, username, password) => {
   let res = await agent.get("/login");

@@ -1,1 +1,15 @@
-<h1 class="text-2xl font-semibold text-gray-600">My Todo-list</h1>
+<div class="flex p-2 m-2">
+  <div class="flex-auto">
+    <h1 class="text-2xl font-semibold text-gray-600">
+      <%= loggedInUser.firstName %>'s Todo-list
+    </h1>
+  </div>
+  <div class="flex-end">
+    <button
+      type="button"
+      class="bg-red-600 text-white px-2 py-1.5 rounded font-small "
+    >
+      <a href="/signout"><p class="text-end">Sign Out</p></a>
+    </button>
+  </div>
+</div>

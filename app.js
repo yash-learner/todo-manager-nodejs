@@ -150,20 +150,27 @@ app.post("/users", async function (request, response) {
   // eslint-disable-next-line no-unused-vars
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
   console.log(hashedPwd);
-  const user = await User.create({
-    firstName: request.body.firstName,
-    lastName: request.body.lastName,
-    email: request.body.email,
-    password: hashedPwd,
-  }).catch((error) => {
+  try {
+    const user = await User.create({
+      firstName: request.body.firstName,
+      lastName: request.body.lastName,
+      email: request.body.email,
+      password: hashedPwd,
+    });
+    request.login(user, function (err) {
+      if (err) {
+        console.log(err);
+      }
+      return response.redirect("/todos");
+    });
+  } catch (error) {
     console.log(error);
-  });
-  request.login(user, function (err) {
-    if (err) {
-      console.log(err);
-    }
-    return response.redirect("/todos");
-  });
+    request.flash(
+      "error",
+      error.errors.map((error) => error.message)
+    );
+    return response.redirect("/signup");
+  }
 });
 
 app.post(
@@ -182,6 +189,13 @@ app.post(
       return response.redirect("/todos");
     } catch (error) {
       console.log(error);
+      if (error.name === "SequelizeValidationError") {
+        request.flash(
+          "error",
+          error.errors.map((error) => error.message)
+        );
+        return response.redirect("/todos");
+      }
       return response.status(422).json(error);
     }
   }

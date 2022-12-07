@@ -115,8 +115,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notNull: true,
-          len: 5,
+          notEmpty: { msg: "Todo title can not be empty" },
         },
       },
       dueDate: DataTypes.DATEONLY,

@@ -53,8 +53,8 @@ passport.use(
             return done(null, false, { message: "Invalid password" });
           }
         })
-        .catch((error) => {
-          return done(error);
+        .catch(() => {
+          return done(null, false, { message: "Email Id not found" });
         });
     }
   )
@@ -82,10 +82,14 @@ app.use(function (request, response, next) {
 });
 
 app.get("/", async (request, response) => {
-  response.render("index", {
-    title: "Todo application",
-    csrfToken: request.csrfToken(),
-  });
+  if (request.user !== null) {
+    response.redirect("/todos");
+  } else {
+    response.render("index", {
+      title: "Todo application",
+      csrfToken: request.csrfToken(),
+    });
+  }
 });
 
 app.get("/signout", (request, response, next) => {

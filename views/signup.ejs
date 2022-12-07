@@ -13,6 +13,7 @@
       <div class="col-start-3 col-span-2 py-10">
         <h1 class="text-xl text-slate-600 font-semibold mb-4">To-Do Manager</h1>
         <h6 class="py-4">Signup as a new user</h6>
+        <span>Already have an account ?</span><a class="hover:text-green-500 text-sm" href="/login"> Sign In</a>
         <div class="mb-3">
           <% if(messages && messages.error && messages.error.length > 0)  { %>
             <% for(var i=0; i<messages.error.length; i++) { %>

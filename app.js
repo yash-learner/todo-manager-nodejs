@@ -82,13 +82,13 @@ app.use(function (request, response, next) {
 });
 
 app.get("/", async (request, response) => {
-  if (request.user !== null) {
-    response.redirect("/todos");
-  } else {
+  if (request.user === undefined) {
     response.render("index", {
       title: "Todo application",
       csrfToken: request.csrfToken(),
     });
+  } else {
+    response.redirect("/todos");
   }
 });
 
